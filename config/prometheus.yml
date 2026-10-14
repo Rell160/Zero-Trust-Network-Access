@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "risk-engine"
+    static_configs:
+      - targets: ["risk-engine:8001"]
+    metrics_path: /metrics
+
+  - job_name: "mfa-server"
+    static_configs:
+      - targets: ["mfa-server:8002"]
+    metrics_path: /metrics
+
+  - job_name: "ztna-controller"
+    static_configs:
+      - targets: ["ztna-controller:8003"]
+    metrics_path: /metrics
+
+  - job_name: "pep"
+    static_configs:
+      - targets: ["pep:8000"]
+    metrics_path: /metrics

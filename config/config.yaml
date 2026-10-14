@@ -1,0 +1,57 @@
+# Core configuration for Risk-Aware ZTNA System
+
+app:
+  env: "development"
+  debug: true
+  log_level: "INFO"
+
+risk_engine:
+  host: "0.0.0.0"
+  port: 8001
+  # Initial thresholds: Low 0-29, Medium 30-59, High 60-84, Critical 85-100
+  thresholds:
+    low: 29
+    medium: 59
+    high: 84
+    critical: 100
+  # Weights must sum to 1.0 (or normalized during scoring)
+  weights:
+    geo_ip_anomaly: 0.15
+    off_hours_access: 0.10
+    device_compliance: 0.20
+    failed_login_attempts: 0.15
+    network_reputation: 0.15
+    behavioral_deviation: 0.10
+    resource_sensitivity: 0.15
+
+mfa_server:
+  host: "0.0.0.0"
+  port: 8002
+  issuer_name: "ZTNA-Enterprise"
+  totp_digits: 6
+  totp_interval_seconds: 30
+  webauthn_simulation:
+    challenge_timeout_seconds: 60
+
+ztna_controller:
+  host: "0.0.0.0"
+  port: 8003
+  default_policy: "DENY"
+  session_timeout_seconds: 3600
+  continuous_reeval_interval_seconds: 30
+
+pep:
+  host: "0.0.0.0"
+  port: 8000
+  target_upstream_url: "http://enterprise-vm-stub:8080"
+  controller_url: "http://ztna-controller:8003"
+  risk_engine_url: "http://risk-engine:8001"
+  mfa_server_url: "http://mfa-server:8002"
+
+database:
+  type: "sqlite"
+  sqlite_path: "ztna_dev.db"
+
+monitoring:
+  prometheus_port: 9090
+  grafana_port: 3000
